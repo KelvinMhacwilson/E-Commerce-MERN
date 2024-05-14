@@ -8,11 +8,12 @@ import axios from "axios";
 import { backendDomain } from "../../common";
 import toast from "react-hot-toast";
 import { setUserDetails } from "../store/userSlice";
+import { useState } from "react";
 
 const Header = () => {
+  const [menu, setMenu] = useState(false);
   const dispatch = useDispatch(setUserDetails);
   const user = useSelector((state) => state?.user?.user);
-  console.log(user);
   const handleLogout = () => {
     axios
       .get(`${backendDomain}/logout`, { withCredentials: true })
@@ -45,15 +46,38 @@ const Header = () => {
         </div>
 
         <div className="flex gap-7 items-center">
-          <div className="text-3xl cursor-pointer ">
-            {user?.profilePic ? (
-              <img
-                src={user?.profilePic}
-                className="w-10 h-10 rounded-full"
-                alt="Profile"
-              />
-            ) : (
-              <FaRegCircleUser />
+          <div
+            className="relative  flex justify-center"
+            onClick={() => setMenu((prev) => !prev)}
+          >
+            {user && (
+              <div className="text-3xl cursor-pointer ">
+                {user?.profilePic ? (
+                  <img
+                    src={user?.profilePic}
+                    className="w-10 h-10 rounded-full"
+                    alt="Profile"
+                  />
+                ) : (
+                  <FaRegCircleUser />
+                )}
+              </div>
+            )}
+
+            {menu && (
+              <div className="absolute bg-white bottom-0 top-11 h-full shadow-lg pt-1 pb-2 rounded">
+                <nav>
+                  {user?.role === "ADMIN" && (
+                    <Link
+                      onClick={() => setMenu((prev) => !prev)}
+                      to="/admin-panel/all-products"
+                      className="whitespace-nowrap p-2 hover:bg-slate-100"
+                    >
+                      Admin
+                    </Link>
+                  )}
+                </nav>
+              </div>
             )}
           </div>
           <div className="text-2xl cursor-pointer relative">

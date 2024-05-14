@@ -8,6 +8,7 @@ import { backendDomain } from "../common";
 import Context from "./context/index";
 import { useDispatch } from "react-redux";
 import { setUserDetails } from "./store/userSlice";
+import "./App.css";
 
 function App() {
   const dispatch = useDispatch();
@@ -33,7 +34,7 @@ function App() {
         }}
       >
         <Header />
-        <main className="min-h-[calc(100vh-100px)]">
+        <main className="min-h-[calc(100vh-120px)] ">
           <Outlet />
         </main>
 
