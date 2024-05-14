@@ -1,10 +1,11 @@
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import LoginIcon from "../assets/signin.gif";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { backendDomain } from "../../common";
 import { toast } from "react-hot-toast";
+import Context from "../context";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -14,6 +15,7 @@ const Login = () => {
   });
 
   const navigate = useNavigate();
+  const { fetchUserDetails } = useContext(Context);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,6 +36,7 @@ const Login = () => {
       })
       .then(() => {
         toast.success("Logged in");
+        fetchUserDetails();
         navigate("/");
       })
       .catch((err) => {
