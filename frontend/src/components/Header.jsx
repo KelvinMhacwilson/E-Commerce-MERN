@@ -3,8 +3,27 @@ import { GrSearch } from "react-icons/gr";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { FaShoppingCart } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { backendDomain } from "../../common";
+import toast from "react-hot-toast";
+import { setUserDetails } from "../store/userSlice";
 
 const Header = () => {
+  const dispatch = useDispatch(setUserDetails);
+  const user = useSelector((state) => state?.user?.user);
+  console.log(user);
+  const handleLogout = () => {
+    axios
+      .get(`${backendDomain}/logout`, { withCredentials: true })
+      .then(() => {
+        dispatch(setUserDetails(null));
+        toast.success("Logged out");
+      })
+      .catch(() => {
+        toast.error("Something went wrong");
+      });
+  };
   return (
     <header className="h-16 shadow-sm bg-white">
       <div className="container mx-auto h-full flex items-center px-4 justify-between">
@@ -27,7 +46,15 @@ const Header = () => {
 
         <div className="flex gap-7 items-center">
           <div className="text-3xl cursor-pointer ">
-            <FaRegCircleUser />
+            {user?.profilePic ? (
+              <img
+                src={user?.profilePic}
+                className="w-10 h-10 rounded-full"
+                alt="Profile"
+              />
+            ) : (
+              <FaRegCircleUser />
+            )}
           </div>
           <div className="text-2xl cursor-pointer relative">
             <span>
@@ -37,11 +64,20 @@ const Header = () => {
               <p>0</p>
             </div>
           </div>
-          <Link to="/login">
-            <button className="px-3 bg-red-600 py-1 rounded-full text-white hover:bg-red-700">
-              Login
+          {!user ? (
+            <Link to="/login">
+              <button className="px-3 bg-red-600 py-1 rounded-full text-white hover:bg-red-700">
+                Login
+              </button>
+            </Link>
+          ) : (
+            <button
+              onClick={handleLogout}
+              className="px-3 bg-red-600 py-1 rounded-full text-white hover:bg-red-700"
+            >
+              Logout
             </button>
-          </Link>
+          )}
         </div>
       </div>
     </header>

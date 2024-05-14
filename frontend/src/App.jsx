@@ -6,15 +6,20 @@ import { useEffect } from "react";
 import axios from "axios";
 import { backendDomain } from "../common";
 import Context from "./context/index";
+import { useDispatch } from "react-redux";
+import { setUserDetails } from "./store/userSlice";
 
 function App() {
+  const dispatch = useDispatch();
   const fetchUserDetails = async () => {
     await axios
       .get(`${backendDomain}/user-details`, {
         withCredentials: true,
       })
-      .then(() => {
-        // console.log(data);
+      .then((res) => {
+        const data = res.data.data;
+
+        dispatch(setUserDetails(data));
       });
   };
   useEffect(() => {
