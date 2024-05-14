@@ -1,7 +1,10 @@
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import LoginIcon from "../assets/signin.gif";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { backendDomain } from "../../common";
+import { toast } from "react-hot-toast";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -9,6 +12,8 @@ const Login = () => {
     email: "",
     password: "",
   });
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,8 +25,20 @@ const Login = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    axios
+      .post(`${backendDomain}/login`, data, {
+        withCredentials: true,
+      })
+      .then(() => {
+        toast.success("Logged in");
+        navigate("/");
+      })
+      .catch((err) => {
+        toast.error(err.response.data || "Something went wrong");
+      });
   };
 
   return (

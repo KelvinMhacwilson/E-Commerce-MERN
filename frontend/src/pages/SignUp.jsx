@@ -1,9 +1,12 @@
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import SignUpIcon from "../assets/signin.gif";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import imageToBase64 from "../helpers/imageToBase64";
+import axios from "axios";
+import { backendDomain } from "../../common";
 
+import { toast } from "react-hot-toast";
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -15,6 +18,8 @@ const SignUp = () => {
     profilePic: "",
   });
 
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setData((prev) => {
@@ -25,9 +30,17 @@ const SignUp = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(data);
+    await axios
+      .post(`${backendDomain}/signup`, data)
+      .then(() => {
+        toast.success("Account Created Successfully");
+        navigate("/login");
+      })
+      .catch((error) => {
+        toast.error(error.response.data.error || "Something went wrong");
+      });
   };
 
   const handleUploadPic = async (e) => {
@@ -123,7 +136,7 @@ const SignUp = () => {
                   required
                   onChange={handleChange}
                   value={data.confirmPassword}
-                  type={showPassword ? "text" : "password"}
+                  type={showConfirmPassword ? "text" : "password"}
                   placeholder="Enter Password"
                   className="w-full h-full outline-none p-2  bg-transparent"
                 />
