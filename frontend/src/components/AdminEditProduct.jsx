@@ -10,9 +10,20 @@ import axios from "axios";
 import { backendDomain } from "../../common";
 import { toast } from "react-hot-toast";
 
-function UploadProduct({ onClose, fetchAllProducts }) {
+function AdminEditProduct({ onClose, productData, fetchAllProducts }) {
   const [fullScreenImage, setFullScreenImage] = useState("");
   const [openFullScreenImage, setOpenFullScreenImage] = useState(false);
+  const [data, setData] = useState({
+    ...productData,
+    productName: productData?.productName,
+    brandName: productData?.brandName,
+    category: productData?.category,
+    productImage: productData?.productImage,
+    description: productData?.description,
+    price: productData?.price,
+    sellingPrice: productData?.sellingPrice,
+  });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (data.productImage.length === 0) {
@@ -21,28 +32,19 @@ function UploadProduct({ onClose, fetchAllProducts }) {
     console.log(e);
     try {
       await axios
-        .post(`${backendDomain}/upload-product`, data, {
+        .post(`${backendDomain}/update-product`, data, {
           withCredentials: true,
         })
         .then(() => {
           fetchAllProducts();
           onClose();
-          toast.success("Product uploaded successfully");
+          toast.success("Product updated successfully");
         });
     } catch (error) {
       toast.error(error.response.data || "Something Went Wrong");
       console.log(error);
     }
   };
-  const [data, setData] = useState({
-    productName: "",
-    brandName: "",
-    category: "",
-    productImage: [],
-    description: "",
-    price: "",
-    sellingPrice: "",
-  });
 
   const handleOnChange = (e) => {
     const { id, value } = e.target;
@@ -83,7 +85,7 @@ function UploadProduct({ onClose, fetchAllProducts }) {
     <div className="fixed w-full h-full top-0 left-0 right-0 bottom-0 flex justify-center items-center bg-slate-200  bg-opacity-90">
       <div className="bg-white p-4 overflow-hidden rounded w-full max-w-2xl h-full max-h-[80%] pb-8">
         <div className="flex justify-between items-center pb-3">
-          <h2 className="font-bold text-lg">Upload Product</h2>
+          <h2 className="font-bold text-lg">Edit Product</h2>
           <button
             className="bg-gray-200 rounded-full hover:text-red-500 cursor-pointer text-2xl p-1 hover:bg-slate-100"
             onClick={onClose}
@@ -127,11 +129,12 @@ function UploadProduct({ onClose, fetchAllProducts }) {
           </label>
           <select
             required
+            defaultValue={productData?.category}
             className="bg-slate-100 p-2 border rounded outline-slate-400"
             onChange={handleOnChange}
             id="category"
           >
-            <option value="">Select Category</option>
+            <option value="">Choose a Category</option>
             {productCategory.map((category, index) => {
               return (
                 <option key={category.value + index} value={category.value}>
@@ -175,7 +178,7 @@ function UploadProduct({ onClose, fetchAllProducts }) {
                       alt={`image${index}`}
                       width={80}
                       height={80}
-                      className="bg-slate-100 border h-[80px] object-contain w-[80px] cursor-pointer"
+                      className="bg-slate-100 h-[80px] w-[80px] object-contain border cursor-pointer"
                     />
 
                     <div
@@ -227,7 +230,7 @@ function UploadProduct({ onClose, fetchAllProducts }) {
           />
 
           <button className="px-2 hover:bg-red-700 transition-all bg-red-600 py-2 text-white mb-5 mt-4 ">
-            Upload Product
+            Edit Product
           </button>
         </form>
       </div>
@@ -241,4 +244,4 @@ function UploadProduct({ onClose, fetchAllProducts }) {
   );
 }
 
-export default UploadProduct;
+export default AdminEditProduct;

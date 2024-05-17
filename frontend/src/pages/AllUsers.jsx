@@ -5,8 +5,17 @@ import moment from "moment";
 import { MdModeEdit } from "react-icons/md";
 import ChangeUserRole from "../components/ChangeUserRole";
 import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const AllUsers = () => {
+  const user = useSelector((state) => state?.user?.user);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!user || user.role !== "ADMIN") {
+      navigate("/");
+    }
+  }, [navigate, user]);
   const [allUsers, setAllUsers] = useState([]);
   const [openUpdateRole, setOpenUpdateRole] = useState(false);
   const [updateUserDetails, setUpdateUserDetails] = useState({
