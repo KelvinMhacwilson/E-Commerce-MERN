@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from "react";
 import { fetchProductsForCategories } from "../helpers/fetchProductsForCategories";
 import { formatPrice } from "../helpers/formatPrice";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
+import { Link } from "react-router-dom";
+import { addToCart } from "../helpers/addToCart";
 
 const HorizontalCardProduct = ({ category, heading }) => {
   const [data, setData] = useState([]);
@@ -72,7 +74,7 @@ const HorizontalCardProduct = ({ category, heading }) => {
             })
           : data?.map((product, index) => {
               return (
-                <div key={index}>
+                <Link to={`/product/${product._id}`} key={index}>
                   <div className="w-96 overflow-hidden h-36 bg-white rounded shadow flex cursor-pointer">
                     <div className="bg-slate-200 h-full p-4 min-w-[120px] md:min-w-[145px] ">
                       <img
@@ -96,12 +98,15 @@ const HorizontalCardProduct = ({ category, heading }) => {
                           {formatPrice(product?.price)}
                         </p>
                       </div>
-                      <button className="bg-red-600 text-white px-3 rounded-full mt-1 text-sm hover:bg-red-700 py-0.5">
+                      <button
+                        onClick={(e) => addToCart(e, product?._id)}
+                        className="bg-red-600 text-white px-3 rounded-full mt-1 text-sm hover:bg-red-700 py-0.5"
+                      >
                         Add to Cart
                       </button>
                     </div>
                   </div>
-                </div>
+                </Link>
               );
             })}
       </div>

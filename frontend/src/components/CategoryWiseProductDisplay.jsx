@@ -1,17 +1,15 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { fetchProductsForCategories } from "../helpers/fetchProductsForCategories";
 import { formatPrice } from "../helpers/formatPrice";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { addToCart } from "../helpers/addToCart";
 
-const VerticalCardProducts = ({ category, heading }) => {
+const CategoryWiseProductDisplay = ({ category, heading }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const loadingList = new Array(13).fill(null);
-
-  const scrollElement = useRef();
 
   const fetchData = async () => {
     setLoading(true);
@@ -24,34 +22,14 @@ const VerticalCardProducts = ({ category, heading }) => {
     fetchData();
   }, []);
 
-  const scrollRight = () => {
-    scrollElement.current.scrollLeft += 300;
-  };
-  const scrollLeft = () => {
-    scrollElement.current.scrollLeft -= 300;
-  };
-
   return (
     <div className="container mx-auto px-4 my-6 relative">
       <h2 className="text-2xl font-semibold py-4">{heading}</h2>
 
       <div
-        className="flex items-center gap-4 md:gap-6 overflow-x-scroll scrollbar-none transition-all"
-        ref={scrollElement}
+        className="grid 
+      grid-cols-[repeat(auto-fit,minmax(300px,300px))] md:gap-6 overflow-x-scroll scrollbar-none transition-all"
       >
-        <button
-          className="bg-white shadow-md rounded-full p-1 absolute left-0 text-lg hidden md:block"
-          onClick={scrollRight}
-        >
-          <FaAngleLeft />
-        </button>
-        <button
-          className="bg-white shadow-md rounded-full p-1 absolute right-0 text-lg hidden md:block"
-          onClick={scrollLeft}
-        >
-          <FaAngleRight />
-        </button>
-
         {loading
           ? loadingList.map((product, index) => {
               return (
@@ -115,4 +93,4 @@ const VerticalCardProducts = ({ category, heading }) => {
   );
 };
 
-export default VerticalCardProducts;
+export default CategoryWiseProductDisplay;
