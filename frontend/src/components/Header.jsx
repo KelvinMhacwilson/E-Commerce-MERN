@@ -83,14 +83,14 @@ const Header = () => {
             )}
           </div>
           {user && (
-            <div className="text-2xl cursor-pointer relative">
+            <Link to="/cart" className="text-2xl cursor-pointer relative">
               <span>
                 <FaShoppingCart />
               </span>
               <div className="bg-red-600 absolute text-sm rounded-full w-5 p-1 text-white flex items-center justify-center h-5 -top-2 -right-3">
                 <p>{context?.cartTotal}</p>
               </div>
-            </div>
+            </Link>
           )}
           {!user ? (
             <Link to="/login">

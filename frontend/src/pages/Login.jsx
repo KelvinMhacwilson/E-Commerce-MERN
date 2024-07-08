@@ -15,7 +15,7 @@ const Login = () => {
   });
 
   const navigate = useNavigate();
-  const { fetchUserDetails } = useContext(Context);
+  const { fetchUserDetails, fetchCartTotal } = useContext(Context);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -38,6 +38,7 @@ const Login = () => {
         toast.success("Logged in");
         fetchUserDetails();
         navigate("/");
+        fetchCartTotal();
       })
       .catch((err) => {
         toast.error(err.response.data || "Something went wrong");
