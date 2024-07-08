@@ -1,14 +1,22 @@
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { backendDomain } from "../../common";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { FaStar, FaStarHalf } from "react-icons/fa";
 import { formatPrice } from "../helpers/formatPrice";
 // import VerticalCardProducts from "../components/VerticalCardProducts";
 import CategoryWiseProductDisplay from "../components/CategoryWiseProductDisplay";
+import Context from "../context";
+import { addToCart } from "../helpers/addToCart";
 
 function ProductDetail() {
   const params = useParams();
+  const { fetchCartTotal } = useContext(Context);
+
+  const handleAddToCart = async (e, productId) => {
+    await addToCart(e, productId);
+    fetchCartTotal();
+  };
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
   const [activeImage, setActiveImage] = useState("");
@@ -154,7 +162,12 @@ function ProductDetail() {
               <button className="px-3 min-w-[120px] text-red-600 font-medium hover:bg-red-600 hover:text-white transition-all  py-1 border-2 border-red-600 rounded">
                 Buy{" "}
               </button>
-              <button className="px-3 min-w-[120px]  font-medium hover:text-red-600 hover:bg-white transition-all text-white  py-1 border-2 bg-red-600 border-red-600 rounded">
+              <button
+                className="px-3 min-w-[120px]  font-medium hover:text-red-600 hover:bg-white transition-all text-white  py-1 border-2 bg-red-600 border-red-600 rounded"
+                onClick={(e) => {
+                  handleAddToCart(e, data?._id);
+                }}
+              >
                 Add to Cart
               </button>
             </div>

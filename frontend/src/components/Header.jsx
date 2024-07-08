@@ -8,9 +8,11 @@ import axios from "axios";
 import { backendDomain } from "../../common";
 import toast from "react-hot-toast";
 import { setUserDetails } from "../store/userSlice";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import Context from "../context";
 
 const Header = () => {
+  const context = useContext(Context);
   const [menu, setMenu] = useState(false);
   const dispatch = useDispatch(setUserDetails);
   const user = useSelector((state) => state?.user?.user);
@@ -80,14 +82,16 @@ const Header = () => {
               </div>
             )}
           </div>
-          <div className="text-2xl cursor-pointer relative">
-            <span>
-              <FaShoppingCart />
-            </span>
-            <div className="bg-red-600 absolute text-sm rounded-full w-5 p-1 text-white flex items-center justify-center h-5 -top-2 -right-3">
-              <p>0</p>
+          {user && (
+            <div className="text-2xl cursor-pointer relative">
+              <span>
+                <FaShoppingCart />
+              </span>
+              <div className="bg-red-600 absolute text-sm rounded-full w-5 p-1 text-white flex items-center justify-center h-5 -top-2 -right-3">
+                <p>{context?.cartTotal}</p>
+              </div>
             </div>
-          </div>
+          )}
           {!user ? (
             <Link to="/login">
               <button className="px-3 bg-red-600 py-1 rounded-full text-white hover:bg-red-700">

@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { Toaster } from "react-hot-toast";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { backendDomain } from "../common";
 import Context from "./context/index";
@@ -11,6 +11,7 @@ import { setUserDetails } from "./store/userSlice";
 import "./App.css";
 
 function App() {
+  const [cartTotal, setCartTotal] = useState(0);
   const dispatch = useDispatch();
   const fetchUserDetails = async () => {
     await axios
@@ -23,14 +24,27 @@ function App() {
         dispatch(setUserDetails(data));
       });
   };
+
+  const fetchCartTotal = async () => {
+    await axios
+      .get(`${backendDomain}/cart-total`, { withCredentials: true })
+      .then((res) => {
+        setCartTotal(res?.data);
+      })
+      .catch((err) => console.log(err));
+  };
+
   useEffect(() => {
     fetchUserDetails();
-  }, []);
+    fetchCartTotal();
+  });
   return (
     <>
       <Context.Provider
         value={{
           fetchUserDetails,
+          cartTotal,
+          fetchCartTotal,
         }}
       >
         <Header />

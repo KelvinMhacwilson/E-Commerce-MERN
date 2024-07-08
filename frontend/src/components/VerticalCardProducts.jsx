@@ -1,15 +1,22 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { fetchProductsForCategories } from "../helpers/fetchProductsForCategories";
 import { formatPrice } from "../helpers/formatPrice";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { addToCart } from "../helpers/addToCart";
+import Context from "../context";
 
 const VerticalCardProducts = ({ category, heading }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const loadingList = new Array(13).fill(null);
+  const { fetchCartTotal } = useContext(Context);
+
+  const handleAddToCart = async (e, productId) => {
+    await addToCart(e, productId);
+    fetchCartTotal();
+  };
 
   const scrollElement = useRef();
 
@@ -102,7 +109,7 @@ const VerticalCardProducts = ({ category, heading }) => {
                     </div>
                     <button
                       className="text-sm bg-red-600 hover:bg-red-700 text-white px-3 py-0.5 rounded-full"
-                      onClick={(e) => addToCart(e, product?._id)}
+                      onClick={(e) => handleAddToCart(e, product?._id)}
                     >
                       Add to Cart
                     </button>
